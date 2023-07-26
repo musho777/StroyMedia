@@ -63,7 +63,7 @@ function Messages({ route, navigation }) {
 
   const [newData,setNewData] = useState([]);
 
-
+    const [newData1,setNewData1] = useState([])
 
 
   useEffect(() => {
@@ -87,6 +87,7 @@ function Messages({ route, navigation }) {
     activeTab == "Диалоги"
       ? dispatch(allDialogRequest({ token: token })).then((res) => {
           setFilteredData(res.payload.data.users);
+          setNewData(res.payload.data.users)
         })
       : dispatch(allChatForumRequest({ token: token })).then((res) => {
           setFilteredData(res.payload.data.data.contacts);
@@ -101,7 +102,6 @@ function Messages({ route, navigation }) {
   const convertForumChatToArray = Object.keys(filteredData).map(function (key) {
     return filteredData[key];
   });
-  const [filterData, setFilteData] = useState(convertForumChatToArray);
   const renderItem = ({ item, index }) => {
     return (
       <>
@@ -171,41 +171,63 @@ function Messages({ route, navigation }) {
     // }
   }, [filteredData.length, activeTab, searchMessages]);
 
+  // useEffect(()=>{
+  //   if(!newData1.length){
+  //     console.log('convertForumChatToArray',convertedArray.length)
+  //     setNewData1(convertedArray)
+  //   }
+  // },[convertedArray])
+
   const filteredMessages = (searchText) => {
-    activeTab === "Диалоги" &&
-      !serachResult.length &&
-      setFilteredData(
-        convertedArray.filter((m) => {
-          alert();
-          return m?.name?.includes(searchText);
+    if(!newData1.length){
+      setNewData1(filteredData)
+    }
+    if(activeTab === "Диалоги"){
+      setFilteredData(newData1);
+
+      console.log(newData1.length,'999')
+      if(searchText){
+        console.log('7777')
+        let item = []
+        convertedArray.map((elm,i)=>{
+            if(elm.name?.includes(searchText)){
+              item.push(elm)
+            }
         })
-      );
-    activeTab === "Чаты" && console.log('');
-    let item = [];
-    console.log(newData.length,25)
-    setFilteredData(newData);
-    if (searchText !== "") {
-      convertForumChatToArray.map((elm, i) => {
-        if (elm?.title?.includes(searchText)) {
-          item.push(elm);
-        }
-      });
-      setFilteredData(item);
+        setFilteredData(item)
+      }
+      // setFilteredData(
+      //   convertedArray.filter((m) => {
+      //     return m?.name?.includes(searchText);
+      //   })
+      // );
+    }
+
+    if(activeTab === "Чаты"){
+      let item = [];
+      setFilteredData(newData);
+      if (searchText !== "") {
+        convertForumChatToArray.map((elm, i) => {
+          if (elm?.title?.includes(searchText)) {
+            item.push(elm);
+          }
+        });
+        setFilteredData(item);
+    }
     }      
     // setFilteredData(
     //   convertForumChatToArray.filter((m) => {
     //     return m?.title?.includes(searchText);
     //   })
     // );
-    activeTab === "Диалоги" &&
-      serachResult.length &&
-      setFilteredData(
-        searchMessages.filter((m) => {
-          return m?.name?.includes(searchText);
-        })
-      );
+    // activeTab === "Диалоги" &&
+    //   serachResult.length &&
+    //   setFilteredData(
+    //     searchMessages.filter((m) => {
+    //       return m?.name?.includes(searchText);
+    //     })
+    //   );
   };
-
   const onClick = () => {
     setChanged(true);
   };
