@@ -12,7 +12,7 @@ import { COLOR_1, COLOR_5 } from "../helpers/Variables";
 import { useSelector } from "react-redux";
 import DelayInput from "react-native-debounce-input";
 
-function FilterItem({ title, onSelect, options, offers, isCitys }) {
+function FilterItem({ title, onSelect, options, offers, isCitys,marginTop=20 }) {
   const [expanded, setExpanded] = useState("");
 
   const [searchValue, setSearchValue] = useState("");
@@ -76,14 +76,14 @@ function FilterItem({ title, onSelect, options, offers, isCitys }) {
         animationOut={"fadeOutUp"}
         onRequestClose={() => setExpanded(false)}
         hardwareAccelerated={true}
-        style={styles.modal}
+        style={[styles.modal]}
         onBackdropPress={() => setExpanded(false)}
         backdropOpacity={0}
         animationInTiming={100}
         animationOutTiming={100}
         deviceHeight={350}
       >
-        <View style={[styles.showPart, offers && { top: 20 }]}>
+        <View style={[styles.showPart, offers && { top: marginTop }]}>
           {isCitys && (
             <View style={styles.searchRow}>
               <DelayInput

@@ -200,6 +200,7 @@ function Offers({route, navigation}) {
           <FilterItem
             isCitys
             offers
+            marginTop = {60}
             title={cityFromName ? cityFromName.title : "Откуда"}
             options={citys}
             top={274}

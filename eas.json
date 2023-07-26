@@ -1,24 +1,21 @@
 {
+  "cli": {
+    "version": ">= 0.60.0"
+  },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal",
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
+      "channel": "preview"
     },
     "production": {
-      "ios": {
-        "resourceClass": "m1-medium"
-      }
+      "channel": "production"
     },
-    "androidapk": {
+
+    "production2": {
       "android": {
         "buildType": "apk"
       }

@@ -31,6 +31,7 @@ const HEIGHT = Dimensions.get("window").width;
 const ITEM_HEIGHT = 100;
 
 export default function Chat({route}) {
+  console.log(8889)
   const navigation = useNavigation();
   const messagesRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");

@@ -58,6 +58,14 @@ function Messages({ route, navigation }) {
   const [userName, setUserName] = useState("");
   const [deletedId, setDeletedId] = useState([]);
 
+
+
+
+  const [newData,setNewData] = useState([]);
+
+
+
+
   useEffect(() => {
     success && setVisibleModal(false);
     success && setCompName("");
@@ -82,6 +90,7 @@ function Messages({ route, navigation }) {
         })
       : dispatch(allChatForumRequest({ token: token })).then((res) => {
           setFilteredData(res.payload.data.data.contacts);
+          setNewData(res.payload.data.data.contacts)
         });
   }, [token, activeTab]);
 
@@ -92,7 +101,7 @@ function Messages({ route, navigation }) {
   const convertForumChatToArray = Object.keys(filteredData).map(function (key) {
     return filteredData[key];
   });
-
+  const [filterData, setFilteData] = useState(convertForumChatToArray);
   const renderItem = ({ item, index }) => {
     return (
       <>
@@ -147,14 +156,19 @@ function Messages({ route, navigation }) {
 
   useEffect(() => {
     setFilteredData(
-      activeTab === "Чаты"
-        ? convertForumChatToArray
-        : searchMessages?.length
-        ? searchMessages
+      activeTab === "Чаты" ? convertForumChatToArray: searchMessages?.length? searchMessages
         : Object.keys(filteredData).map((key) => {
             return filteredData[key];
           })
     );
+    // if(!newData.length){
+    //   setNewData(
+    //     activeTab === "Чаты" ? convertForumChatToArray: searchMessages?.length? searchMessages
+    //       : Object.keys(filteredData).map((key) => {
+    //           return filteredData[key];
+    //         })
+    //   )
+    // }
   }, [filteredData.length, activeTab, searchMessages]);
 
   const filteredMessages = (searchText) => {
@@ -166,12 +180,23 @@ function Messages({ route, navigation }) {
           return m?.name?.includes(searchText);
         })
       );
-    activeTab === "Чаты" &&
-      setFilteredData(
-        convertForumChatToArray.filter((m) => {
-          return m?.title?.includes(searchText);
-        })
-      );
+    activeTab === "Чаты" && console.log('');
+    let item = [];
+    console.log(newData.length,25)
+    setFilteredData(newData);
+    if (searchText !== "") {
+      convertForumChatToArray.map((elm, i) => {
+        if (elm?.title?.includes(searchText)) {
+          item.push(elm);
+        }
+      });
+      setFilteredData(item);
+    }      
+    // setFilteredData(
+    //   convertForumChatToArray.filter((m) => {
+    //     return m?.title?.includes(searchText);
+    //   })
+    // );
     activeTab === "Диалоги" &&
       serachResult.length &&
       setFilteredData(
