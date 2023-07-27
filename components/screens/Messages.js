@@ -185,7 +185,6 @@ function Messages({ route, navigation }) {
     if(activeTab === "Диалоги"){
       setFilteredData(newData1);
 
-      console.log(newData1.length,'999')
       if(searchText){
         console.log('7777')
         let item = []

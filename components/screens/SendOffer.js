@@ -208,8 +208,6 @@ function SendOffer(props) {
         <MyButton
           style={styles.submitButton}
           onPress={() => {
-            console.log(currency, 'currency')
-            console.log(periodOfUsing)
             var form_data = new FormData();
             form_data.append("secret_token", token);
             form_data.append("last_id", item.last_id.toString());

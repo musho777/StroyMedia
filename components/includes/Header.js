@@ -102,7 +102,6 @@ function Header({currentPage, home, navigation, onSavePress}) {
                       style={styles.notificationWrapper}
                       key={index}
                       onPress={() => {
-                        console.log(item[0]?.object?.request.last_id)
                         let form_data = new FormData();
                         form_data.append("secret_token", token);
                         form_data.append("last_id", item[0]?.object?.request.last_id);
@@ -326,7 +325,6 @@ function Header({currentPage, home, navigation, onSavePress}) {
                             work_request_data?.request?.comments[0].last_id.toString(),
                         })
                       ).then((res) => {
-                        console.log(res, 'res.payload')
                         if (res.payload.success) {
                           setModalRequest(false)
                           navigation.navigate("DialogChat", {})
@@ -357,7 +355,6 @@ function Header({currentPage, home, navigation, onSavePress}) {
                             work_request_data?.request?.comments[0].last_id.toString(),
                         })
                       ).then((res) => {
-                        console.log(res, "res.payload");
                         if (res.payload.success) {
                           setModalRequest(false)
                         }

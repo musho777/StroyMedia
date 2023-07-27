@@ -19,7 +19,6 @@ import { ActivityIndicator } from "react-native";
 function Polls({ route, navigation }) {
   const { loading } = useSelector((state) => state.getAllPolsSlice);
   const [data, setData] = useState([]);
-  console.log(data);
   let filteredData = [];
   const { currentPage } = route.params;
   const dispatch = useDispatch();
@@ -30,7 +29,6 @@ function Polls({ route, navigation }) {
     AsyncStorage.getItem("token").then((result) => {
       if (result) {
         dispatch(getAllPollsRequest({ token: result })).then((res) => {
-          console.log(res.payload.data?.data.rows);
           setData(res.payload.data?.data.rows);
         });
       }
