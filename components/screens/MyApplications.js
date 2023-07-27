@@ -197,7 +197,7 @@ function MyApplications() {
   };
 
   useEffect(() => {
-    if (searchValue.trim().length < 1) {
+    if (searchValue.trim()?.length < 1) {
       resetText();
     }
   }, [searchValue, activeTab]);
@@ -308,7 +308,7 @@ function MyApplications() {
       </Modal>
       {headerComponent()}
       {/* && activeTab !== "Архив" */}
-      {data.length ? (
+      {data?.length ? (
         <View style={styles.wrapper}>
           <SwipeListView
             data={filteredData}
@@ -319,7 +319,7 @@ function MyApplications() {
               return <Text style={styles.empty}>ничего не найдено</Text>;
             }}
             ListFooterComponent={() => {
-              return filteredData.length ? (
+              return filteredData?.length ? (
                 <View
                   style={{
                     flex: 1,
@@ -344,7 +344,7 @@ function MyApplications() {
                   </View>
                   <View>
                     <TouchableOpacity
-                      disabled={filteredData.length === 5 ? false : true}
+                      disabled={filteredData?.length === 5 ? false : true}
                       onPress={nextPage}
                     >
                       <Entypo name="chevron-right" size={28} color={"gray"}/>

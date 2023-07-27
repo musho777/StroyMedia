@@ -421,7 +421,7 @@ export default function Chat({route}) {
                   fontSize: 20,
                 }}
               >
-                У вас еще нет сообщений
+                {searchValue ===''? 'У вас еще нет сообщений':'Не найдено'}
               </Text>
             </View>
           )}

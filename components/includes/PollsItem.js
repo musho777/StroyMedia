@@ -106,7 +106,7 @@ function PollsItem({ optionsList, id, total, vote }) {
           );
         }
       })}
-      <Text style={styles.smallText}>{vote.length} голоса</Text>
+      <Text style={styles.smallText}>{vote?.length} голоса</Text>
     </View>
   ) : (
     <View>
