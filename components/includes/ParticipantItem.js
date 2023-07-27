@@ -21,7 +21,6 @@ function ParticipantItem({
   const [token, setToken] = useState();
   const [liked, setLiked] = useState(likedList);
   const dispatch = useDispatch();
-
   useEffect(() => {
     AsyncStorage.getItem("token").then((result) => {
       if (result) {
@@ -60,7 +59,6 @@ function ParticipantItem({
           <TouchableOpacity
             onPress={() => {
               dispatch(addFavoriteRequest({token: token, id: id}));
-
               setLiked((prevState) => {
                 return prevState.map((like) => {
                   if (like === "is_Favorite") {
@@ -89,10 +87,7 @@ function ParticipantItem({
           activeOpacity={0.5}
           onPress={() => {
             dispatch(membersSingleRequest({token: token, id: id}));
-            navigation.navigate("SingleParticipant", {
-              currentPage: "Страница участника",
-              id,
-            });
+            navigation.navigate("SingleParticipant", {currentPage: "Страница участника",id});
           }}
         >
           <View style={styles.leftPart}>

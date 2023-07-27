@@ -65,7 +65,7 @@ function SingleParticipant({route, navigation}) {
       last_id: route?.params.id,
       user_id: contacts[0]?.company.last_id
     })).then(res => {
-      if (res.payload.success) {
+      if (res.payload?.success) {
         setSuccessReviewSend(res.payload.data)
       }
     })
@@ -200,7 +200,7 @@ function SingleParticipant({route, navigation}) {
         toOrFrom={"на"}
         review={{
           uri:
-            "https://teus.online" + item.from.avatar_person || item.from.avatar,
+            "https://teus.online" + item.from?.avatar_person || item.from.avatar,
           name: item.user.name,
           date: moment(date).format("DD.MM.YYYY"),
           id: 3,
