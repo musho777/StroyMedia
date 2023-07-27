@@ -186,10 +186,10 @@ function Messages({ route, navigation }) {
       setFilteredData(newData1);
 
       if(searchText){
-        console.log('7777')
         let item = []
         convertedArray.map((elm,i)=>{
-            if(elm.name?.includes(searchText)){
+          console.log(elm.contact_person ,elm.description)
+            if(elm.name?.includes(searchText)||elm.contact_person?.includes(searchText)||elm.description?.includes(searchText)){
               item.push(elm)
             }
         })
