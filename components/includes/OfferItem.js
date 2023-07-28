@@ -16,11 +16,14 @@ export function OfferItem({
   tab,
   typeId,
   likedList,
+  d
 }) {
   const [token, setToken] = useState("");
-  const [liked, setLiked] = useState(likedList);
+  const [liked, setLiked] = useState();
   const dispatch = useDispatch();
-
+  useEffect(()=>{
+    setLiked(likedList)
+  },[likedList])
   useEffect(() => {
     AsyncStorage.getItem("token").then((result) => {
       if (result) {
@@ -65,8 +68,9 @@ export function OfferItem({
             </View>
             <TouchableOpacity
               onPress={() => {
-                setLiked(!liked);
+                // setLiked(!liked);
                 dispatch(getLiklyCatRequest({token, id: item.last_id}));
+                d(id)
               }}
             >
               {liked ? <ImageFavoriteGreen/> : <ImageFavorite/>}

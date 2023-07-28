@@ -24,6 +24,7 @@ import {getCitys} from "../../store/reducers/getCitysSlice";
 import Modal from "react-native-modal";
 import {allSuggestionRequest} from "../../store/reducers/getAllSuggestionsSlice";
 import {Entypo} from "@expo/vector-icons";
+import { getFavorites } from "../../store/reducers/getFavoritesSlice";
 
 const SearchIcon = require("../../assets/search.png");
 
@@ -31,6 +32,8 @@ function Offers({route, navigation}) {
   const [tabs, setTabs] = useState(["Все предложения", "Избранное"]);
   const [activeTab, setActiveTab] = useState("Все предложения");
   const {loading} = useSelector((state) => state.getAllSuggestionsSlice);
+  const favoriteData = useSelector((state) => state.getFavoritesSlice);
+
   const [citys, setCitys] = useState([]);
   const typeContainer = ["40 ST", "20 (30)", "20 (24)", "40 HQ"];
   const secondaryTabs = [
@@ -54,6 +57,7 @@ function Offers({route, navigation}) {
   const [offset, setOffset] = useState(0);
   const [page, setPage] = useState(1);
   const [filteredData, setFilteredData] = useState([]);
+  const [allData,setAllData] = useState([])
   const timeStamnp = +filteredData[0]?.date_create?.$date.$numberLong;
   let allCitys = useSelector(
     (state) => state.getCitysSlice?.data?.data?.data?.citys
@@ -61,7 +65,6 @@ function Offers({route, navigation}) {
   const favoriteList = useSelector(
     (state) => state.getAllSuggestionsSlice.favoriteList
   );
-
   const dispatch = useDispatch();
   let liked = false;
 
@@ -69,6 +72,8 @@ function Offers({route, navigation}) {
     AsyncStorage.getItem("token").then((result) => {
       if (result) {
         setToken(result);
+        dispatch(getFavorites(result))
+
       }
     });
     const getCytys = () => {
@@ -80,7 +85,6 @@ function Offers({route, navigation}) {
     };
     getCytys();
   }, []);
-
   const filtered = () => {
     setFilteredData(
       filteredData?.filter((c) => {
@@ -88,17 +92,39 @@ function Offers({route, navigation}) {
       })
     );
   };
+  useEffect(()=>{
+    if(activeTab === 'Избранное'){
+      dispatch(getFavorites(token))      
+    }
+    else {
+      setFilteredData(allData)
+    }
+  },[activeTab])
+
+  useEffect(()=>{
+    setFilteredData(favoriteData.data)
+  },[favoriteData.data])
+
+
+  const removeFromFavorites = (id) =>{
+    let item = [...filteredData]
+    item.map((elm,i)=>{
+      if(elm.last_id === id){
+        item.splice(i,1)
+      }
+    })
+    setFilteredData(item)
+  }
 
   const renderItem = ({item, index}) => {
-    if (favoriteList[index] == "is_Favorite") {
-      liked = true;
-    } else if (favoriteList[index] == "not_Favorite") {
-      liked = false;
-    }
-
+    // if (favoriteList[index] == "is_Favorite") {
+    //   liked = true;
+    // } else if (favoriteList[index] == "not_Favorite") {
+    //   liked = false;
+    // }
     return (
       <OfferItem
-        likedList={liked}
+        likedList={activeTab === 'Избранное' ? true:false}
         navigation={navigation}
         date={item?.date_create?.$date?.$numberLong}
         id={item.last_id}
@@ -106,6 +132,7 @@ function Offers({route, navigation}) {
         item={item}
         timeStamnp={timeStamnp}
         tab={activeTab}
+        d = {(id)=>{removeFromFavorites(id)}}
       />
     );
   };
@@ -217,7 +244,6 @@ function Offers({route, navigation}) {
             options={typeContainer}
             onSelect={(option) => {
               setTypeContainer(option.title);
-              // console.log(option.title);
               // filterTypeContainer(option.title);
             }}
             top={274}
@@ -270,6 +296,7 @@ function Offers({route, navigation}) {
               : null,
       })
     ).then((res) => {
+      setAllData(res.payload.data?.data.rows)
       setFilteredData(res.payload.data?.data.rows);
     });
   }, [
@@ -359,7 +386,9 @@ function Offers({route, navigation}) {
           }}
           ListEmptyComponent={() => {
             return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.empty}>ничего не найдено</Text>
+              <Text style={styles.empty}>{activeTab !== 'Избранное'?'ничего не найдено':
+              'У Вас нет избранных'
+              }</Text>
             </View>;
           }}
 
