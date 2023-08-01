@@ -9,6 +9,7 @@ export const addFavoriteRequest = createAsyncThunk(
         secret_token: token,
         company_id: id,
       });
+      console.log(result.data)
 
       return result.data;
     } catch (error) {

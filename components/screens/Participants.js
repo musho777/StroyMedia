@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {getCitys} from "../../store/reducers/getCitysSlice";
 import {Entypo} from "@expo/vector-icons";
 import {getMembersRequest} from "../../store/reducers/getMembersDataSlice";
+import {getFavoriteMembers} from "../../store/reducers/getFavoriteMembers";
 
 const SearchIcon = require("../../assets/search.png");
 
@@ -30,12 +31,17 @@ function Participants({route, navigation}) {
   const {data, favoriteList, loading} = state.getMembersSlice;
   const {currentPage} = route.params;
   const dispatch = useDispatch();
+  const favoriteData = useSelector((state) => state.getFavoriteMembersSlicer);
   let liked = false;
-
+  const [newfavoriteData,setNewfavoriteData] = useState([])
+  useEffect(()=>{
+      setNewfavoriteData(favoriteData.data)
+  },[favoriteData.data])
   useEffect(() => {
     AsyncStorage.getItem("token").then((result) => {
       if (result) {
         setToken(result);
+        dispatch(getFavoriteMembers(token))
         dispatch(
           getMembersRequest({
             token: result,
@@ -54,30 +60,25 @@ function Participants({route, navigation}) {
       });
   }, [navigation]);
 
-  // useEffect(() => {
-  //   dispatch(getMembersRequest({ token }))
-  //     .unwrap()
-  //     .then((res) => {
-  //       console.log(res?.data?.data?.isLike, "favoriteList");
-  //       favoriteList = res?.data?.data?.isLike;
-  //     });
-  //   // setLikedList(favoriteList);
-  // }, [success]);
 
-  // test Armani hamar
+  useEffect(()=>{
+    if(activeTab === 'Избранное'){
+      dispatch(getFavoriteMembers(token))      
+    }
+  },[activeTab])
 
-  // const makeFakeRequest = async () => {
-  //   await fetch("https://admin.justcode.am/api/new_request", {
-  //     method: "POST",
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data, "data");
-  //     });
-  // };
-  // useEffect(() => {
-  //   makeFakeRequest();
-  // }, []);
+
+  const addRemoveItem = (type,id) =>{
+    let item = [...newfavoriteData]
+    if(type === 'add'){
+      let i = data.findIndex((item)=>item.last_id == id);
+      item.push(data[i])
+    }
+    if(type === 'remove'){
+      item.splice(id,1)
+    }
+    setNewfavoriteData(item)
+  }
 
   const resetText = () => {
     setSearchValue("");
@@ -91,16 +92,16 @@ function Participants({route, navigation}) {
     setCityName("");
   };
 
-  useEffect(() => {
-    dispatch(
-      getMembersRequest({
-        token,
-        offset,
-        city: cityId ? cityId : null,
-        role: role ? role : null,
-      })
-    );
-  }, [offset, token, activeTab, role]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getMembersRequest({
+  //       token,
+  //       offset,
+  //       city: cityId ? cityId : null,
+  //       role: role ? role : null,
+  //     })
+  //   );
+  // }, [offset, token, activeTab, role]);
 
   const nextPage = () => {
     setOffset(offset + 5);
@@ -212,11 +213,12 @@ function Participants({route, navigation}) {
         ) : null}
       </View>
       <FlatList
-        data={data}
+        data={activeTab !== 'Избранное'? data :newfavoriteData}
         ListEmptyComponent={() => {
           return <Text style={styles.empty}>ничего не найдено</Text>;
         }}
         renderItem={({item, index}) => {
+            console.log(newfavoriteData.findIndex( (element) => element.last_id === item.last_id));
           return (
             <View
               style={{
@@ -226,7 +228,7 @@ function Participants({route, navigation}) {
               }}
             >
               <ParticipantItem
-                likedList={favoriteList}
+                likedList={newfavoriteData.findIndex( (element) => element.last_id === item.last_id)>=0}
                 favorites={activeTab}
                 imageUri={`https://teus.online/${item?.avatar}`}
                 companyName={item?.name || item?.contact_person}
@@ -235,6 +237,7 @@ function Participants({route, navigation}) {
                 navigation={navigation}
                 id={item?.last_id}
                 index={index}
+                addRemoveItem = {(type,i)=>addRemoveItem(type,i)}
               />
             </View>
           );

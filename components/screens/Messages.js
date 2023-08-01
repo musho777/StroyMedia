@@ -86,8 +86,14 @@ function Messages({ route, navigation }) {
   useEffect(() => {
     activeTab == "Диалоги"
       ? dispatch(allDialogRequest({ token: token })).then((res) => {
-          setFilteredData(res.payload.data.users);
-          setNewData(res.payload.data.users)
+          if(res.payload){
+            setFilteredData(res.payload.data.users);
+            setNewData(res.payload.data.users)
+          }
+          else {
+            setFilteredData([]);
+            setNewData([])
+          }
         })
       : dispatch(allChatForumRequest({ token: token })).then((res) => {
           setFilteredData(res.payload.data.data.contacts);

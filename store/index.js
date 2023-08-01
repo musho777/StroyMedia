@@ -44,7 +44,7 @@ import deleteChatSlice from "./reducers/deleteChatSlice";
 import forgotPasswordSlice from "./reducers/forgotPasswordSlice";
 import workRequestGetDataSlice from "./reducers/workRequestGetDataSlice";
 import getFavoritesSlice from './reducers/getFavoritesSlice'
-
+import getFavoriteMembersSlicer from './reducers/getFavoriteMembers'
 
 const RootReducer = combineReducers({
   loginSlice,
@@ -93,7 +93,8 @@ const RootReducer = combineReducers({
   searchChatMembersSlice,
   getAllNotificationsSlice,
   workRequestGetDataSlice,
-  getFavoritesSlice
+  getFavoritesSlice,
+  getFavoriteMembersSlicer
 });
 
 const configureCustomStore = () => {

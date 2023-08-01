@@ -63,13 +63,14 @@ function SingleParticipant({route, navigation}) {
     dispatch(checkUserReviewRequest({
       token,
       last_id: route?.params.id,
-      user_id: contacts[0]?.company.last_id
-    })).then(res => {
+      user_id:contacts && contacts[0]?.company.last_id
+    }))
+    .then(res => {
       if (res.payload?.success) {
         setSuccessReviewSend(res.payload.data)
       }
-    })
-    console.log(route.params.id)
+    }
+    )
   }, [data]);
 
   const leaveReview = () => {
@@ -191,7 +192,6 @@ function SingleParticipant({route, navigation}) {
                          : 0;
   }
 
-  console.log(total_rate, 152);
 
   const renderItem = ({item}) => {
     const date = item.date.$date.$numberLomg;
