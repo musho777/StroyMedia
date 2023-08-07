@@ -194,7 +194,6 @@ function Messages({ route, navigation }) {
       if(searchText){
         let item = []
         convertedArray.map((elm,i)=>{
-          console.log(elm.contact_person ,elm.description)
             if(elm.name?.includes(searchText)||elm.contact_person?.includes(searchText)||elm.description?.includes(searchText)){
               item.push(elm)
             }

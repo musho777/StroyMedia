@@ -78,24 +78,40 @@ function SingleParticipant({route, navigation}) {
   };
   const reviewSubmit = () => {
     let star = null
-    if (rate === 2) {
-      star = 5
-    } else if (rate === 1) {
-      star = 4
-    } else if (rate === 0) {
-      star = 3
-    } else if (rate === -1) {
+    if (rate === 5) {
       star = 2
-    } else if (rate === -2) {
+    } else if (rate === 4) {
       star = 1
+    } else if (rate === 3) {
+      star = 0
+    } else if (rate === 2) {
+      star = -1
+    } else if (rate === 1) {
+      star = -2
     }
 
-    if (star == 3) {
+    // if (star == 3) {
+    //   star = 'netral'
+    // } else if (star > 3) {
+    //   star = 'plus'
+    // } else if (star < 3) {
+    //   star = 'minus'
+    // }
+    console.log(rate)
+    if(rate == 2){
+      star ='plus' 
+    }
+    else if (rate == 1){
+      star = 'good'
+    }
+    else if (rate == 0){
       star = 'netral'
-    } else if (star > 3) {
-      star = 'plus'
-    } else if (star < 3) {
+    }
+    else if (rate == -1){
       star = 'minus'
+    }
+    else if (rate == -2){
+      star = 'negativ'
     }
     // star == 3 ? alert() : star > 3 ? "plus" : "minus"
     reviewText && star
@@ -103,7 +119,7 @@ function SingleParticipant({route, navigation}) {
       projectReviewRequest({
         token,
         id: route?.params?.id,
-        rate: star,
+        rate : star,
         // rate: new_rate,
         review: reviewText,
       })

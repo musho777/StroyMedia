@@ -33,7 +33,6 @@ function ParticipantItem({
   useEffect(() => {
     setLiked(likedList);
   }, [likedList]);
-  // console.log(id)
 
   return (
     <>

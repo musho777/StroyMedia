@@ -139,7 +139,7 @@ function Offers({route, navigation}) {
 
   const resetText = () => {
     setCitys(allCitys);
-    setSearchValue("");
+    // setSearchValue("");
     setTypeContainer(null);
     setFromCityName(null);
     setToCityName(null);
@@ -148,7 +148,7 @@ function Offers({route, navigation}) {
   const resetFiltered = () => {
     setPage(1);
     setOffset("0");
-    setSearchName("");
+    // setSearchName("");
     setTypeContainer(null);
     setFromCityName(null);
     setToCityName(null);
@@ -385,11 +385,15 @@ function Offers({route, navigation}) {
 
           }}
           ListEmptyComponent={() => {
-            return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.empty}>{activeTab !== 'Избранное'?'ничего не найдено':
-              'У Вас нет избранных'
-              }</Text>
-            </View>;
+            if(activeTab !== 'Избранное'){
+              return <Text style={styles.empty}>ничего не найдено</Text>
+            }
+            else if(activeTab === 'Избранное' && searchValue){
+              return <Text style={styles.empty}>ничего не найдено</Text>
+            }
+            else if(activeTab === 'Избранное' && !searchValue){
+              return <Text style={styles.empty}>У Вас нет избранных</Text>
+            }
           }}
 
           renderHiddenItem={({item}) => {

@@ -29,6 +29,7 @@ class ReviewItem extends Component {
 
   render() {
     const { toOrFrom, review } = this.props;
+    console.log(review.rating)
     return (
       <View style={styles.wrapper}>
         <View style={styles.header}>

@@ -28,8 +28,10 @@ function Participants({route, navigation}) {
   const [cityName, setCityName] = useState("");
   // const [liked, setLiked] = useState(false);
   const state = useSelector((state) => state);
+  const [searchFavoriteData,setSearchFavoriteData] = useState([])
   const {data, favoriteList, loading} = state.getMembersSlice;
   const {currentPage} = route.params;
+  const [first,setFirst] = useState(false)
   const dispatch = useDispatch();
   const favoriteData = useSelector((state) => state.getFavoriteMembersSlicer);
   let liked = false;
@@ -39,6 +41,7 @@ function Participants({route, navigation}) {
   },[favoriteData.data])
   useEffect(() => {
     AsyncStorage.getItem("token").then((result) => {
+      setFirst(true)
       if (result) {
         setToken(result);
         dispatch(getFavoriteMembers(token))
@@ -81,7 +84,7 @@ function Participants({route, navigation}) {
   }
 
   const resetText = () => {
-    setSearchValue("");
+    // setSearchValue("");
     filtered("");
   };
 
@@ -92,16 +95,18 @@ function Participants({route, navigation}) {
     setCityName("");
   };
 
-  // useEffect(() => {
-  //   dispatch(
-  //     getMembersRequest({
-  //       token,
-  //       offset,
-  //       city: cityId ? cityId : null,
-  //       role: role ? role : null,
-  //     })
-  //   );
-  // }, [offset, token, activeTab, role]);
+  useEffect(() => {
+    if(first){
+      dispatch(
+        getMembersRequest({
+          token,
+          offset,
+          city: cityId ? cityId : null,
+          role: role ? role : null,
+        })
+      );
+    }
+  }, [offset,activeTab]);
 
   const nextPage = () => {
     setOffset(offset + 5);
@@ -119,6 +124,22 @@ function Participants({route, navigation}) {
     dispatch(
       getMembersRequest({token, offset: null, role, city: id, companyName})
     );
+    if(activeTab == 'Избранное'){
+      let item = [...searchFavoriteData]
+      if(searchValue !== ''){
+        newfavoriteData.map((elm,i)=>{
+          if(elm.name.includes(searchValue)){
+            item.push(elm)
+          }
+        })
+      setNewfavoriteData(item)
+      }
+      else {
+        setNewfavoriteData(favoriteData.data)
+      }
+     
+      // dispatch(getFavoriteMembers(token))
+    }
   };
 
   return (
@@ -134,6 +155,7 @@ function Participants({route, navigation}) {
         onPress={(tab) => {
           resetFiltered();
           setActiveTab(tab);
+          setSearchValue("");
           // setOffset(null);
         }}
         tabs={tabs}
@@ -155,7 +177,7 @@ function Participants({route, navigation}) {
         <View style={styles.searchRow}>
           <Search
             style={styles.search}
-            searchText={searchValue}
+            value={searchValue}
             onSearchText={(val) => {
               val === "" && resetFiltered();
               setSearchValue(val);
@@ -166,7 +188,7 @@ function Participants({route, navigation}) {
             activeOpacity={0.2}
             onPress={() => {
               filtered(cityId, role, searchValue);
-              setSearchValue("");
+              // setSearchValue("");
             }}
           >
             <Image source={SearchIcon} style={{width: 25, height: 25}}/>
@@ -213,12 +235,21 @@ function Participants({route, navigation}) {
         ) : null}
       </View>
       <FlatList
-        data={activeTab !== 'Избранное'? data :newfavoriteData}
+        data={
+          activeTab !== 'Избранное'? data :newfavoriteData
+        }
         ListEmptyComponent={() => {
-          return <Text style={styles.empty}>ничего не найдено</Text>;
+          if(activeTab !== 'Избранное'){
+            return <Text style={styles.empty}>ничего не найдено</Text>;
+          }
+          else if(activeTab === 'Избранное' && searchValue){
+            return <Text style={styles.empty}>ничего не найдено</Text>;
+          }
+          else if (activeTab === 'Избранное' && !searchValue){
+            return <Text style={styles.empty}>У Вас нет избранных</Text>;
+          }
         }}
         renderItem={({item, index}) => {
-            console.log(newfavoriteData.findIndex( (element) => element.last_id === item.last_id));
           return (
             <View
               style={{
